@@ -1,0 +1,14 @@
+.git/**
+.github/**
+.vscode/**
+node_modules/**
+src/**
+.prettierignore
+.prettierrc.json
+.gitignore
+eslint.config.mjs
+tsconfig.json
+package-lock.json
+out/**/*.map
+test/**
+*.vsix
