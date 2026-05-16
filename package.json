@@ -1,0 +1,113 @@
+{
+  "name": "yommit",
+  "displayName": "Yommit",
+  "description": "Generate Gitmoji commit messages from staged Git changes using Aliyun Bailian.",
+  "version": "0.0.1",
+  "publisher": "local",
+  "author": "qingyu",
+  "license": "MIT",
+  "icon": "assets/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qingyu-dev/yommit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/qingyu-dev/yommit/issues"
+  },
+  "homepage": "https://github.com/qingyu-dev/yommit#readme",
+  "keywords": [
+    "vscode",
+    "git",
+    "commit",
+    "gitmoji",
+    "aliyun",
+    "bailian",
+    "ai"
+  ],
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Source Control",
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:yommit.generateCommitMessage",
+    "onCommand:yommit.setApiKey",
+    "onCommand:yommit.clearApiKey"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "yommit.generateCommitMessage",
+        "title": "Yommit: Generate Commit Message",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "yommit.setApiKey",
+        "title": "Yommit: Set Aliyun API Key"
+      },
+      {
+        "command": "yommit.clearApiKey",
+        "title": "Yommit: Clear Aliyun API Key"
+      }
+    ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "yommit.generateCommitMessage",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Yommit",
+      "properties": {
+        "yommit.model": {
+          "type": "string",
+          "default": "qwen3.6-flash",
+          "description": "Aliyun Bailian model name used to generate commit messages."
+        },
+        "yommit.baseUrl": {
+          "type": "string",
+          "default": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+          "description": "OpenAI-compatible base URL for Aliyun Bailian."
+        },
+        "yommit.language": {
+          "type": "string",
+          "enum": [
+            "en",
+            "zh"
+          ],
+          "enumDescriptions": [
+            "Generate the commit summary in English.",
+            "Generate the commit summary in Chinese."
+          ],
+          "default": "zh",
+          "description": "Language for the generated commit summary."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package",
+    "test": "npm run compile && node --test \"test/**/*.test.mjs\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.8.0",
+    "@types/vscode": "1.90.0",
+    "@vscode/vsce": "^3.9.1",
+    "eslint": "^10.4.0",
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.3"
+  }
+}
