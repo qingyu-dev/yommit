@@ -3,7 +3,7 @@
   "displayName": "Yommit",
   "description": "Generate Gitmoji commit messages from staged Git changes using Aliyun Bailian.",
   "version": "0.0.1",
-  "publisher": "local",
+  "publisher": "qingyu-dev",
   "author": "qingyu",
   "license": "MIT",
   "icon": "assets/icon.png",
@@ -28,13 +28,8 @@
     "vscode": "^1.90.0"
   },
   "categories": [
-    "Source Control",
+    "SCM Providers",
     "Other"
-  ],
-  "activationEvents": [
-    "onCommand:yommit.generateCommitMessage",
-    "onCommand:yommit.setApiKey",
-    "onCommand:yommit.clearApiKey"
   ],
   "main": "./out/extension.js",
   "contributes": {
