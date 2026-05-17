@@ -51,8 +51,9 @@ Example output:
 2. Stage your changes with `git add` or the Source Control panel.
 3. Keep the default `yommit.provider` as `DeepSeek` or switch it to `Alibaba (China)`.
 4. Run `Yommit: Set API Key` and enter the API key for the selected provider.
-5. Click the sparkle button in the Source Control title bar.
-6. Review the generated commit message before committing.
+5. Optionally run `Yommit: Select Model` to choose a provider-specific model.
+6. Click the sparkle button in the Source Control title bar.
+7. Review the generated commit message before committing.
 
 You can also run `Yommit: Generate Commit Message` from the Command Palette.
 
@@ -66,13 +67,12 @@ Install Yommit from the VS Code Marketplace:
 
 ## Settings
 
-| Setting                      | Default          | Description                                      |
-| ---------------------------- | ---------------- | ------------------------------------------------ |
-| `yommit.provider`            | `DeepSeek`       | Model provider: `DeepSeek` or `Alibaba (China)`. |
-| `yommit.model`               | provider default | Optional model override.                         |
-| `yommit.language`            | `zh`             | Commit summary language: `zh` or `en`.           |
-| `yommit.useGitmoji`          | `true`           | Add a Gitmoji at the start of the message.       |
-| `yommit.useConventionalType` | `false`          | Add a type like `feat:` to the message.          |
+| Setting                      | Default    | Description                                      |
+| ---------------------------- | ---------- | ------------------------------------------------ |
+| `yommit.provider`            | `DeepSeek` | Model provider: `DeepSeek` or `Alibaba (China)`. |
+| `yommit.language`            | `zh`       | Commit summary language: `zh` or `en`.           |
+| `yommit.useGitmoji`          | `true`     | Add a Gitmoji at the start of the message.       |
+| `yommit.useConventionalType` | `false`    | Add a type like `feat:` to the message.          |
 
 Provider defaults:
 
@@ -82,6 +82,7 @@ Provider defaults:
 | `Alibaba (China)` | `qwen3.6-flash`     |
 
 API keys are stored in VS Code SecretStorage and are not written to `settings.json`.
+Model choices are selected with `Yommit: Select Model` and stored per provider.
 
 Output format depends on the Gitmoji and Conventional Commit type settings, and all four combinations are supported:
 
@@ -104,6 +105,7 @@ API keys are stored locally through VS Code SecretStorage. Yommit does not write
 | --------------------------------- | ------------------------------------------------------ |
 | `Yommit: Generate Commit Message` | Generate a commit message from staged changes.         |
 | `Yommit: Set API Key`             | Save or replace the API key for the selected provider. |
+| `Yommit: Select Model`            | Choose the model used for the selected provider.       |
 | `Yommit: Clear API Key`           | Remove the API key for the selected provider.          |
 
 ## Development

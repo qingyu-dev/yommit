@@ -51,8 +51,9 @@ Yommit 是一个 VS Code 插件，可以根据当前 Git 暂存区变更生成�
 2. 使用 `git add` 或 Source Control 面板暂存变更。
 3. 保持默认 `yommit.provider = DeepSeek`，或切换为 `Alibaba (China)`。
 4. 运行 `Yommit: Set API Key`，输入当前 provider 对应的 API Key。
-5. 点击 Source Control 标题栏中的 sparkle 按钮。
-6. 检查生成的 commit message，然后提交。
+5. 如有需要，运行 `Yommit: Select Model` 选择当前 provider 对应的模型。
+6. 点击 Source Control 标题栏中的 sparkle 按钮。
+7. 检查生成的 commit message，然后提交。
 
 也可以从命令面板运行 `Yommit: Generate Commit Message`。
 
@@ -66,13 +67,12 @@ Yommit 是一个 VS Code 插件，可以根据当前 Git 暂存区变更生成�
 
 ## 配置
 
-| 配置项                       | 默认值          | 说明                                          |
-| ---------------------------- | --------------- | --------------------------------------------- |
-| `yommit.provider`            | `DeepSeek`      | 模型提供商：`DeepSeek` 或 `Alibaba (China)`。 |
-| `yommit.model`               | provider 默认值 | 可选的模型覆盖值。                            |
-| `yommit.language`            | `zh`            | 提交摘要语言，支持 `zh` 或 `en`。             |
-| `yommit.useGitmoji`          | `true`          | 是否在提交信息开头添加 Gitmoji。              |
-| `yommit.useConventionalType` | `false`         | 是否在提交信息中添加 `feat:` 这类 type。      |
+| 配置项                       | 默认值     | 说明                                          |
+| ---------------------------- | ---------- | --------------------------------------------- |
+| `yommit.provider`            | `DeepSeek` | 模型提供商：`DeepSeek` 或 `Alibaba (China)`。 |
+| `yommit.language`            | `zh`       | 提交摘要语言，支持 `zh` 或 `en`。             |
+| `yommit.useGitmoji`          | `true`     | 是否在提交信息开头添加 Gitmoji。              |
+| `yommit.useConventionalType` | `false`    | 是否在提交信息中添加 `feat:` 这类 type。      |
 
 provider 默认值：
 
@@ -82,6 +82,7 @@ provider 默认值：
 | `Alibaba (China)` | `qwen3.6-flash`     |
 
 API Key 会保存在 VS Code SecretStorage 中，不会写入 `settings.json`。
+模型通过 `Yommit: Select Model` 命令按 provider 选择并分别保存。
 
 生成格式由 Gitmoji 和 Conventional Commit type 两个开关决定，4 种组合都支持：
 
@@ -104,6 +105,7 @@ API Key 只通过 VS Code SecretStorage 保存在本机。项目不会把 API Ke
 | --------------------------------- | ------------------------------------ |
 | `Yommit: Generate Commit Message` | 根据暂存区变更生成提交信息。         |
 | `Yommit: Set API Key`             | 保存或替换当前 provider 的 API Key。 |
+| `Yommit: Select Model`            | 选择当前 provider 使用的模型。       |
 | `Yommit: Clear API Key`           | 删除当前 provider 的 API Key。       |
 
 ## 开发
