@@ -70,17 +70,16 @@ Yommit 是一个 VS Code 插件，可以根据当前 Git 暂存区变更生成�
 | ---------------------------- | --------------- | --------------------------------------------- |
 | `yommit.provider`            | `DeepSeek`      | 模型提供商：`DeepSeek` 或 `Alibaba (China)`。 |
 | `yommit.model`               | provider 默认值 | 可选的模型覆盖值。                            |
-| `yommit.baseUrl`             | provider 默认值 | 可选的 base URL 覆盖值。                      |
 | `yommit.language`            | `zh`            | 提交摘要语言，支持 `zh` 或 `en`。             |
 | `yommit.useGitmoji`          | `true`          | 是否在提交信息开头添加 Gitmoji。              |
 | `yommit.useConventionalType` | `false`         | 是否在提交信息中添加 `feat:` 这类 type。      |
 
 provider 默认值：
 
-| Provider          | 默认 model          | 默认 base URL                                       |
-| ----------------- | ------------------- | --------------------------------------------------- |
-| `DeepSeek`        | `deepseek-v4-flash` | `https://api.deepseek.com`                          |
-| `Alibaba (China)` | `qwen3.6-flash`     | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
+| Provider          | 默认 model          |
+| ----------------- | ------------------- |
+| `DeepSeek`        | `deepseek-v4-flash` |
+| `Alibaba (China)` | `qwen3.6-flash`     |
 
 API Key 会保存在 VS Code SecretStorage 中，不会写入 `settings.json`。
 

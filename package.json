@@ -78,11 +78,6 @@
           "default": "",
           "description": "Optional model override. Leave empty to use the selected provider default."
         },
-        "yommit.baseUrl": {
-          "type": "string",
-          "default": "",
-          "description": "Optional OpenAI-compatible base URL override. Leave empty to use the selected provider default."
-        },
         "yommit.language": {
           "type": "string",
           "enum": [

@@ -13,18 +13,12 @@ export class VscodeConfig implements ConfigPort {
     return {
       provider,
       model: getConfiguredString(configuration, 'model') ?? providerDefaults.model,
-      baseUrl: trimTrailingSlash(
-        getConfiguredString(configuration, 'baseUrl') ?? providerDefaults.baseUrl,
-      ),
+      baseUrl: providerDefaults.baseUrl,
       language: toCommitLanguage(configuration.get<string>('language', 'zh')),
       useGitmoji: configuration.get<boolean>('useGitmoji', true),
       useConventionalType: configuration.get<boolean>('useConventionalType', false),
     };
   }
-}
-
-function trimTrailingSlash(value: string): string {
-  return value.replace(/\/+$/, '');
 }
 
 function getConfiguredString(

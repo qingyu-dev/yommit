@@ -70,17 +70,16 @@ Install Yommit from the VS Code Marketplace:
 | ---------------------------- | ---------------- | ------------------------------------------------ |
 | `yommit.provider`            | `DeepSeek`       | Model provider: `DeepSeek` or `Alibaba (China)`. |
 | `yommit.model`               | provider default | Optional model override.                         |
-| `yommit.baseUrl`             | provider default | Optional base URL override.                      |
 | `yommit.language`            | `zh`             | Commit summary language: `zh` or `en`.           |
 | `yommit.useGitmoji`          | `true`           | Add a Gitmoji at the start of the message.       |
 | `yommit.useConventionalType` | `false`          | Add a type like `feat:` to the message.          |
 
 Provider defaults:
 
-| Provider          | Default model       | Default base URL                                    |
-| ----------------- | ------------------- | --------------------------------------------------- |
-| `DeepSeek`        | `deepseek-v4-flash` | `https://api.deepseek.com`                          |
-| `Alibaba (China)` | `qwen3.6-flash`     | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
+| Provider          | Default model       |
+| ----------------- | ------------------- |
+| `DeepSeek`        | `deepseek-v4-flash` |
+| `Alibaba (China)` | `qwen3.6-flash`     |
 
 API keys are stored in VS Code SecretStorage and are not written to `settings.json`.
 
