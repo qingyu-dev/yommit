@@ -2,7 +2,7 @@
   "name": "yommit",
   "displayName": "Yommit",
   "description": "Generate commit messages from staged Git changes with optional Gitmoji and Conventional Commit prefixes using DeepSeek or Aliyun Bailian.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "qingyu-dev",
   "author": "qingyu",
   "license": "MIT",
