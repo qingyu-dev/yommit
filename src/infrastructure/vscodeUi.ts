@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { SecretPort, UiPort } from '../application/ports';
+import { getProviderDefaults, ModelProvider } from '../domain/modelProvider';
 
 /** Adapts VS Code window APIs for user feedback and auth recovery. */
 export class VscodeUi implements UiPort {
@@ -30,17 +31,18 @@ export class VscodeUi implements UiPort {
     );
   }
 
-  async handleAuthError(): Promise<void> {
+  async handleAuthError(provider: ModelProvider): Promise<void> {
+    const providerDefaults = getProviderDefaults(provider);
     const action = await vscode.window.showErrorMessage(
-      'Aliyun API key may be invalid or unauthorized.',
+      `${providerDefaults.label} API key may be invalid or unauthorized.`,
       'Set API Key',
       'Clear API Key',
     );
 
     if (action === 'Set API Key') {
-      await this.secrets.setApiKey();
+      await this.secrets.setApiKey(provider);
     } else if (action === 'Clear API Key') {
-      await this.secrets.clearApiKey();
+      await this.secrets.clearApiKey(provider);
     }
   }
 }

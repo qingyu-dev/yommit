@@ -1,16 +1,20 @@
 import * as vscode from 'vscode';
 import { ConfigPort, ExtensionConfig } from '../application/ports';
 import { toCommitLanguage } from '../domain/commitLanguage';
+import { DEFAULT_PROVIDER, getProviderDefaults, toModelProvider } from '../domain/modelProvider';
 
 /** Adapts VS Code settings into the extension's runtime configuration. */
 export class VscodeConfig implements ConfigPort {
   getConfig(): ExtensionConfig {
     const configuration = vscode.workspace.getConfiguration('yommit');
+    const provider = toModelProvider(configuration.get<string>('provider', DEFAULT_PROVIDER));
+    const providerDefaults = getProviderDefaults(provider);
 
     return {
-      model: configuration.get<string>('model', 'qwen3.6-flash'),
+      provider,
+      model: getConfiguredString(configuration, 'model') ?? providerDefaults.model,
       baseUrl: trimTrailingSlash(
-        configuration.get<string>('baseUrl', 'https://dashscope.aliyuncs.com/compatible-mode/v1'),
+        getConfiguredString(configuration, 'baseUrl') ?? providerDefaults.baseUrl,
       ),
       language: toCommitLanguage(configuration.get<string>('language', 'zh')),
       useGitmoji: configuration.get<boolean>('useGitmoji', true),
@@ -21,4 +25,20 @@ export class VscodeConfig implements ConfigPort {
 
 function trimTrailingSlash(value: string): string {
   return value.replace(/\/+$/, '');
+}
+
+function getConfiguredString(
+  configuration: vscode.WorkspaceConfiguration,
+  key: string,
+): string | undefined {
+  const inspected = configuration.inspect<string>(key);
+  const value =
+    inspected?.workspaceFolderValue ?? inspected?.workspaceValue ?? inspected?.globalValue;
+
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  return trimmed ? trimmed : undefined;
 }

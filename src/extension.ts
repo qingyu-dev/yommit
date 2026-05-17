@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import { ClearApiKeyUseCase } from './application/clearApiKeyUseCase';
 import { GenerateCommitMessageUseCase } from './application/generateCommitMessageUseCase';
 import { SetApiKeyUseCase } from './application/setApiKeyUseCase';
-import { AliyunChatModel } from './infrastructure/aliyunChatModel';
 import { GitCliRepository } from './infrastructure/gitCliRepository';
+import { OpenAiCompatibleChatModel } from './infrastructure/openAiCompatibleChatModel';
 import { VscodeConfig } from './infrastructure/vscodeConfig';
 import { VscodeScmWriter } from './infrastructure/vscodeScmWriter';
 import { VscodeSecretStore } from './infrastructure/vscodeSecretStore';
@@ -16,18 +16,19 @@ const COMMAND_CLEAR_API_KEY = 'yommit.clearApiKey';
 
 /** Wires application use cases to VS Code commands when the extension activates. */
 export function activate(context: vscode.ExtensionContext) {
+  const config = new VscodeConfig();
   const secrets = new VscodeSecretStore(context);
   const generateCommitMessage = new GenerateCommitMessageUseCase(
     new VscodeWorkspace(),
     new GitCliRepository(),
     secrets,
-    new VscodeConfig(),
-    new AliyunChatModel(),
+    config,
+    new OpenAiCompatibleChatModel(),
     new VscodeScmWriter(),
     new VscodeUi(secrets),
   );
-  const setApiKey = new SetApiKeyUseCase(secrets);
-  const clearApiKey = new ClearApiKeyUseCase(secrets);
+  const setApiKey = new SetApiKeyUseCase(secrets, config);
+  const clearApiKey = new ClearApiKeyUseCase(secrets, config);
 
   context.subscriptions.push(
     vscode.commands.registerCommand(COMMAND_GENERATE, () => generateCommitMessage.execute()),

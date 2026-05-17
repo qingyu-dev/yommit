@@ -1,4 +1,5 @@
 import { buildCommitPrompt } from '../domain/commitPrompt';
+import { AuthenticationError } from './errors';
 import {
   ChatModelPort,
   ConfigPort,
@@ -40,14 +41,14 @@ export class GenerateCommitMessageUseCase {
       return;
     }
 
-    const apiKey = await this.secrets.getOrPromptForApiKey();
+    const extensionConfig = this.config.getConfig();
+    const apiKey = await this.secrets.getOrPromptForApiKey(extensionConfig.provider);
     if (!apiKey) {
       return;
     }
 
     await this.ui.withGeneratingProgress(async (signal) => {
       try {
-        const extensionConfig = this.config.getConfig();
         const prompt = buildCommitPrompt(stagedChanges, {
           language: extensionConfig.language,
           useGitmoji: extensionConfig.useGitmoji,
@@ -63,8 +64,8 @@ export class GenerateCommitMessageUseCase {
 
         await this.scm.writeCommitMessage(workspaceFolder.path, commitMessage);
       } catch (error) {
-        if (isAuthError(error)) {
-          await this.ui.handleAuthError();
+        if (error instanceof AuthenticationError) {
+          await this.ui.handleAuthError(extensionConfig.provider);
           return;
         }
 
@@ -72,9 +73,4 @@ export class GenerateCommitMessageUseCase {
       }
     });
   }
-}
-
-function isAuthError(error: unknown): boolean {
-  const message = error instanceof Error ? error.message : String(error);
-  return message.includes('401') || message.includes('403');
 }

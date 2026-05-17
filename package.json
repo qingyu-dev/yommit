@@ -1,7 +1,7 @@
 {
   "name": "yommit",
   "displayName": "Yommit",
-  "description": "Generate commit messages from staged Git changes with optional Gitmoji and Conventional Commit prefixes using Aliyun Bailian.",
+  "description": "Generate commit messages from staged Git changes with optional Gitmoji and Conventional Commit prefixes using DeepSeek or Aliyun Bailian.",
   "version": "0.0.1",
   "publisher": "qingyu-dev",
   "author": "qingyu",
@@ -20,6 +20,7 @@
     "git",
     "commit",
     "gitmoji",
+    "deepseek",
     "aliyun",
     "bailian",
     "ai"
@@ -41,11 +42,11 @@
       },
       {
         "command": "yommit.setApiKey",
-        "title": "Yommit: Set Aliyun API Key"
+        "title": "Yommit: Set API Key"
       },
       {
         "command": "yommit.clearApiKey",
-        "title": "Yommit: Clear Aliyun API Key"
+        "title": "Yommit: Clear API Key"
       }
     ],
     "menus": {
@@ -59,15 +60,28 @@
     "configuration": {
       "title": "Yommit",
       "properties": {
+        "yommit.provider": {
+          "type": "string",
+          "enum": [
+            "DeepSeek",
+            "Alibaba (China)"
+          ],
+          "enumDescriptions": [
+            "Use the DeepSeek official API.",
+            "Use the Alibaba Cloud Bailian OpenAI-compatible API."
+          ],
+          "default": "DeepSeek",
+          "description": "Model provider used to generate commit messages."
+        },
         "yommit.model": {
           "type": "string",
-          "default": "qwen3.6-flash",
-          "description": "Aliyun Bailian model name used to generate commit messages."
+          "default": "",
+          "description": "Optional model override. Leave empty to use the selected provider default."
         },
         "yommit.baseUrl": {
           "type": "string",
-          "default": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-          "description": "OpenAI-compatible base URL for Aliyun Bailian."
+          "default": "",
+          "description": "Optional OpenAI-compatible base URL override. Leave empty to use the selected provider default."
         },
         "yommit.language": {
           "type": "string",

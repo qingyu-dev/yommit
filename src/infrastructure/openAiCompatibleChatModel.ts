@@ -1,3 +1,8 @@
+import {
+  AuthenticationError,
+  EmptyCommitMessageError,
+  RequestTimeoutError,
+} from '../application/errors';
 import { ChatModelPort } from '../application/ports';
 import { normalizeCommitMessage } from '../domain/commitMessage';
 
@@ -14,8 +19,8 @@ type ChatCompletionResponse = {
 
 const REQUEST_TIMEOUT_MS = 45_000;
 
-/** Calls Aliyun Bailian's OpenAI-compatible chat completions API. */
-export class AliyunChatModel implements ChatModelPort {
+/** Calls an OpenAI-compatible chat completions API. */
+export class OpenAiCompatibleChatModel implements ChatModelPort {
   async generateCommitMessage(input: {
     apiKey: string;
     baseUrl: string;
@@ -58,7 +63,9 @@ export class AliyunChatModel implements ChatModelPort {
       });
     } catch (error) {
       if (abortController.signal.aborted) {
-        throw new Error('Aliyun request was cancelled or timed out.', { cause: error });
+        throw new RequestTimeoutError('API request was cancelled or timed out.', {
+          cause: error,
+        });
       }
 
       throw error;
@@ -73,12 +80,16 @@ export class AliyunChatModel implements ChatModelPort {
 
     if (!response.ok) {
       const message = body?.error?.message ?? response.statusText;
-      throw new Error(`Aliyun request failed with ${response.status}: ${message}`);
+      if (response.status === 401 || response.status === 403) {
+        throw new AuthenticationError(`API request failed with ${response.status}: ${message}`);
+      }
+
+      throw new Error(`API request failed with ${response.status}: ${message}`);
     }
 
     const content = body?.choices?.[0]?.message?.content?.trim();
     if (!content) {
-      throw new Error('The model returned an empty commit message.');
+      throw new EmptyCommitMessageError('The model returned an empty commit message.');
     }
 
     return normalizeCommitMessage(content);

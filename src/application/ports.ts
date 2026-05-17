@@ -1,8 +1,10 @@
 import { CommitLanguage } from '../domain/commitLanguage';
+import { ModelProvider } from '../domain/modelProvider';
 import { StagedChanges } from '../domain/stagedChanges';
 
 /** Runtime options read from VS Code settings. */
 export type ExtensionConfig = {
+  provider: ModelProvider;
   model: string;
   baseUrl: string;
   language: CommitLanguage;
@@ -27,11 +29,11 @@ export interface GitPort {
   getStagedChanges(cwd: string): Promise<StagedChanges>;
 }
 
-/** Manages the Aliyun API key without exposing storage details to use cases. */
+/** Manages provider API keys without exposing storage details to use cases. */
 export interface SecretPort {
-  getOrPromptForApiKey(): Promise<string | undefined>;
-  setApiKey(): Promise<void>;
-  clearApiKey(): Promise<void>;
+  getOrPromptForApiKey(provider: ModelProvider): Promise<string | undefined>;
+  setApiKey(provider: ModelProvider): Promise<void>;
+  clearApiKey(provider: ModelProvider): Promise<void>;
 }
 
 /** Reads extension configuration without coupling use cases to VS Code APIs. */
@@ -60,5 +62,5 @@ export interface UiPort {
   showWarning(message: string): void;
   showError(message: string): void;
   withGeneratingProgress<T>(task: (signal: AbortSignal) => Promise<T>): Promise<T>;
-  handleAuthError(): Promise<void>;
+  handleAuthError(provider: ModelProvider): Promise<void>;
 }
