@@ -6,6 +6,8 @@ export type ExtensionConfig = {
   model: string;
   baseUrl: string;
   language: CommitLanguage;
+  useGitmoji: boolean;
+  useConventionalType: boolean;
 };
 
 /** Workspace data needed by application use cases. */

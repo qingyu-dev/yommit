@@ -13,6 +13,8 @@ export class VscodeConfig implements ConfigPort {
         configuration.get<string>('baseUrl', 'https://dashscope.aliyuncs.com/compatible-mode/v1'),
       ),
       language: toCommitLanguage(configuration.get<string>('language', 'zh')),
+      useGitmoji: configuration.get<boolean>('useGitmoji', true),
+      useConventionalType: configuration.get<boolean>('useConventionalType', false),
     };
   }
 }

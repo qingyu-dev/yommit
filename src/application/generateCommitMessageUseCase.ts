@@ -48,7 +48,11 @@ export class GenerateCommitMessageUseCase {
     await this.ui.withGeneratingProgress(async (signal) => {
       try {
         const extensionConfig = this.config.getConfig();
-        const prompt = buildCommitPrompt(stagedChanges, extensionConfig.language);
+        const prompt = buildCommitPrompt(stagedChanges, {
+          language: extensionConfig.language,
+          useGitmoji: extensionConfig.useGitmoji,
+          useConventionalType: extensionConfig.useConventionalType,
+        });
         const commitMessage = await this.chatModel.generateCommitMessage({
           apiKey,
           baseUrl: extensionConfig.baseUrl,

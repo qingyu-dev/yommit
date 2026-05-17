@@ -1,7 +1,7 @@
 {
   "name": "yommit",
   "displayName": "Yommit",
-  "description": "Generate Gitmoji commit messages from staged Git changes using Aliyun Bailian.",
+  "description": "Generate commit messages from staged Git changes with optional Gitmoji and Conventional Commit prefixes using Aliyun Bailian.",
   "version": "0.0.1",
   "publisher": "qingyu-dev",
   "author": "qingyu",
@@ -81,6 +81,16 @@
           ],
           "default": "zh",
           "description": "Language for the generated commit summary."
+        },
+        "yommit.useGitmoji": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include a Gitmoji at the start of generated commit messages."
+        },
+        "yommit.useConventionalType": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include a Conventional Commit type such as feat:, fix:, docs:, chore:, or refactor: in generated commit messages."
         }
       }
     }
@@ -92,7 +102,7 @@
     "format:check": "prettier --check .",
     "watch": "tsc -watch -p ./",
     "lint": "eslint src --ext ts",
-    "package": "vsce package",
+    "package": "vsce package --no-rewrite-relative-links",
     "test": "npm run compile && node --test \"test/**/*.test.mjs\""
   },
   "devDependencies": {
