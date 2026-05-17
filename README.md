@@ -5,7 +5,7 @@
 <h1 align="center">Yommit</h1>
 
 <p align="center">
-  Generate commit messages from staged Git changes with optional Gitmoji and Conventional Commit prefixes.
+  Generate commit messages from staged Git changes with optional Gitmoji and Conventional Commit prefixes using DeepSeek or Aliyun.
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@
 
 Yommit is a VS Code extension that generates commit messages from your staged Git changes.
 
-It reads the current staged diff, sends the change summary to an Aliyun Bailian OpenAI-compatible model, and writes the generated message back to the VS Code Source Control commit input.
+It reads the current staged diff, sends the change summary to the configured DeepSeek or Aliyun Bailian OpenAI-compatible model, and writes the generated message back to the VS Code Source Control commit input.
 
 ## Inspiration
 
@@ -31,10 +31,10 @@ This project is inspired by [carloscuesta/gitmoji](https://github.com/carloscues
 - Generate commit messages from staged Git changes.
 - Write the result directly into the VS Code Source Control input box.
 - Support plain summaries, Gitmoji, Conventional Commit prefixes, or both together.
-- Store the Aliyun API key with VS Code SecretStorage.
+- Store DeepSeek and Aliyun API keys with VS Code SecretStorage.
 - Support Chinese and English commit summaries.
 - Toggle Gitmoji and Conventional Commit type output.
-- Use `qwen3.6-flash` by default for a faster and cheaper lightweight workflow.
+- Use DeepSeek by default, with Aliyun Bailian available as an alternative provider.
 
 Example output:
 
@@ -49,9 +49,10 @@ Example output:
 
 1. Open a Git repository in VS Code.
 2. Stage your changes with `git add` or the Source Control panel.
-3. Run `Yommit: Set Aliyun API Key` and enter your Aliyun Bailian API key.
-4. Click the sparkle button in the Source Control title bar.
-5. Review the generated commit message before committing.
+3. Keep the default `yommit.provider` as `DeepSeek` or switch it to `Alibaba (China)`.
+4. Run `Yommit: Set API Key` and enter the API key for the selected provider.
+5. Click the sparkle button in the Source Control title bar.
+6. Review the generated commit message before committing.
 
 You can also run `Yommit: Generate Commit Message` from the Command Palette.
 
@@ -65,15 +66,23 @@ Install Yommit from the VS Code Marketplace:
 
 ## Settings
 
-| Setting                      | Default                                             | Description                                |
-| ---------------------------- | --------------------------------------------------- | ------------------------------------------ |
-| `yommit.model`               | `qwen3.6-flash`                                     | Aliyun Bailian model name.                 |
-| `yommit.baseUrl`             | `https://dashscope.aliyuncs.com/compatible-mode/v1` | OpenAI-compatible Aliyun Bailian base URL. |
-| `yommit.language`            | `zh`                                                | Commit summary language: `zh` or `en`.     |
-| `yommit.useGitmoji`          | `true`                                              | Add a Gitmoji at the start of the message. |
-| `yommit.useConventionalType` | `false`                                             | Add a type like `feat:` to the message.    |
+| Setting                      | Default          | Description                                      |
+| ---------------------------- | ---------------- | ------------------------------------------------ |
+| `yommit.provider`            | `DeepSeek`       | Model provider: `DeepSeek` or `Alibaba (China)`. |
+| `yommit.model`               | provider default | Optional model override.                         |
+| `yommit.baseUrl`             | provider default | Optional base URL override.                      |
+| `yommit.language`            | `zh`             | Commit summary language: `zh` or `en`.           |
+| `yommit.useGitmoji`          | `true`           | Add a Gitmoji at the start of the message.       |
+| `yommit.useConventionalType` | `false`          | Add a type like `feat:` to the message.          |
 
-The API key is stored in VS Code SecretStorage and is not written to `settings.json`.
+Provider defaults:
+
+| Provider          | Default model       | Default base URL                                    |
+| ----------------- | ------------------- | --------------------------------------------------- |
+| `DeepSeek`        | `deepseek-v4-flash` | `https://api.deepseek.com`                          |
+| `Alibaba (China)` | `qwen3.6-flash`     | `https://dashscope.aliyuncs.com/compatible-mode/v1` |
+
+API keys are stored in VS Code SecretStorage and are not written to `settings.json`.
 
 Output format depends on the Gitmoji and Conventional Commit type settings, and all four combinations are supported:
 
@@ -86,17 +95,17 @@ Output format depends on the Gitmoji and Conventional Commit type settings, and 
 
 ## Privacy and Security
 
-Yommit reads the staged diff from the current Git repository and sends that change content to your configured Aliyun Bailian OpenAI-compatible endpoint to generate a commit message. Do not stage secrets, credentials, customer data, or sensitive company code if that content must not be sent to an external model service.
+Yommit reads the staged diff from the current Git repository and sends that change content to your configured DeepSeek or Aliyun Bailian endpoint to generate a commit message. Do not stage secrets, credentials, customer data, or sensitive company code if that content must not be sent to an external model service.
 
-The API key is stored locally through VS Code SecretStorage. Yommit does not write the API key to `settings.json`, log it, or upload it separately.
+API keys are stored locally through VS Code SecretStorage. Yommit does not write them to `settings.json`, log them, or upload them separately.
 
 ## Commands
 
-| Command                           | Description                                    |
-| --------------------------------- | ---------------------------------------------- |
-| `Yommit: Generate Commit Message` | Generate a commit message from staged changes. |
-| `Yommit: Set Aliyun API Key`      | Save or replace the Aliyun API key.            |
-| `Yommit: Clear Aliyun API Key`    | Remove the saved Aliyun API key.               |
+| Command                           | Description                                            |
+| --------------------------------- | ------------------------------------------------------ |
+| `Yommit: Generate Commit Message` | Generate a commit message from staged changes.         |
+| `Yommit: Set API Key`             | Save or replace the API key for the selected provider. |
+| `Yommit: Clear API Key`           | Remove the API key for the selected provider.          |
 
 ## Development
 
@@ -124,7 +133,7 @@ The project uses a lightweight DDD-style structure:
 src/
 ├─ application/     # Use cases and ports
 ├─ domain/          # Prompt, Gitmoji, and commit-message rules
-├─ infrastructure/  # VS Code, Git CLI, SecretStorage, and Aliyun adapters
+├─ infrastructure/  # VS Code, Git CLI, SecretStorage, and model-provider adapters
 └─ extension.ts     # Command registration and dependency wiring
 ```
 
