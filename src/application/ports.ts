@@ -1,5 +1,5 @@
 import { CommitLanguage } from '../domain/commitLanguage';
-import { ModelProvider } from '../domain/modelProvider';
+import { ModelProvider, ProviderModel } from '../domain/modelProvider';
 import { StagedChanges } from '../domain/stagedChanges';
 
 /** Runtime options read from VS Code settings. */
@@ -41,6 +41,12 @@ export interface ConfigPort {
   getConfig(): ExtensionConfig;
 }
 
+/** Persists the selected model for each provider outside the user settings UI. */
+export interface ModelSelectionPort {
+  getSelectedModel(provider: ModelProvider): string | undefined;
+  setSelectedModel(provider: ModelProvider, model: string): Promise<void>;
+}
+
 /** Generates commit text from a prompt using an external chat model. */
 export interface ChatModelPort {
   generateCommitMessage(input: {
@@ -61,6 +67,12 @@ export interface ScmPort {
 export interface UiPort {
   showWarning(message: string): void;
   showError(message: string): void;
+  showInformation(message: string): void;
   withGeneratingProgress<T>(task: (signal: AbortSignal) => Promise<T>): Promise<T>;
   handleAuthError(provider: ModelProvider): Promise<void>;
+  pickModel(input: {
+    provider: ModelProvider;
+    currentModel: string;
+    options: ProviderModel[];
+  }): Promise<string | undefined>;
 }

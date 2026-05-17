@@ -1,23 +1,28 @@
 import * as vscode from 'vscode';
 import { ClearApiKeyUseCase } from './application/clearApiKeyUseCase';
 import { GenerateCommitMessageUseCase } from './application/generateCommitMessageUseCase';
+import { SelectModelUseCase } from './application/selectModelUseCase';
 import { SetApiKeyUseCase } from './application/setApiKeyUseCase';
 import { GitCliRepository } from './infrastructure/gitCliRepository';
 import { OpenAiCompatibleChatModel } from './infrastructure/openAiCompatibleChatModel';
 import { VscodeConfig } from './infrastructure/vscodeConfig';
+import { VscodeModelSelectionStore } from './infrastructure/vscodeModelSelectionStore';
 import { VscodeScmWriter } from './infrastructure/vscodeScmWriter';
 import { VscodeSecretStore } from './infrastructure/vscodeSecretStore';
 import { VscodeUi } from './infrastructure/vscodeUi';
 import { VscodeWorkspace } from './infrastructure/vscodeWorkspace';
 
 const COMMAND_GENERATE = 'yommit.generateCommitMessage';
+const COMMAND_SELECT_MODEL = 'yommit.selectModel';
 const COMMAND_SET_API_KEY = 'yommit.setApiKey';
 const COMMAND_CLEAR_API_KEY = 'yommit.clearApiKey';
 
 /** Wires application use cases to VS Code commands when the extension activates. */
 export function activate(context: vscode.ExtensionContext) {
-  const config = new VscodeConfig();
+  const modelSelection = new VscodeModelSelectionStore(context);
+  const config = new VscodeConfig(modelSelection);
   const secrets = new VscodeSecretStore(context);
+  const ui = new VscodeUi(secrets);
   const generateCommitMessage = new GenerateCommitMessageUseCase(
     new VscodeWorkspace(),
     new GitCliRepository(),
@@ -25,13 +30,15 @@ export function activate(context: vscode.ExtensionContext) {
     config,
     new OpenAiCompatibleChatModel(),
     new VscodeScmWriter(),
-    new VscodeUi(secrets),
+    ui,
   );
+  const selectModel = new SelectModelUseCase(config, modelSelection, ui);
   const setApiKey = new SetApiKeyUseCase(secrets, config);
   const clearApiKey = new ClearApiKeyUseCase(secrets, config);
 
   context.subscriptions.push(
     vscode.commands.registerCommand(COMMAND_GENERATE, () => generateCommitMessage.execute()),
+    vscode.commands.registerCommand(COMMAND_SELECT_MODEL, () => selectModel.execute()),
     vscode.commands.registerCommand(COMMAND_SET_API_KEY, () => setApiKey.execute()),
     vscode.commands.registerCommand(COMMAND_CLEAR_API_KEY, () => clearApiKey.execute()),
   );

@@ -11,6 +11,7 @@ const { MAX_STAGED_DIFF_CHARS } = require('../out/domain/stagedChanges.js');
 const {
   DEFAULT_PROVIDER,
   getProviderDefaults,
+  isProviderModel,
   toModelProvider,
 } = require('../out/domain/modelProvider.js');
 
@@ -56,13 +57,48 @@ describe('modelProvider', () => {
       model: 'deepseek-v4-flash',
       baseUrl: 'https://api.deepseek.com',
       secretKey: 'yommit.deepseekApiKey',
+      models: [
+        {
+          id: 'deepseek-v4-flash',
+          label: 'deepseek-v4-flash',
+          description: 'Default. Fast and low-cost for everyday commit messages.',
+        },
+        {
+          id: 'deepseek-v4-pro',
+          label: 'deepseek-v4-pro',
+          description: 'Higher capability model for harder diffs and stricter summaries.',
+        },
+      ],
     });
     assert.deepEqual(getProviderDefaults('Alibaba (China)'), {
       label: 'Alibaba (China)',
       model: 'qwen3.6-flash',
       baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
       secretKey: 'yommit.aliyunApiKey',
+      models: [
+        {
+          id: 'qwen3.6-flash',
+          label: 'qwen3.6-flash',
+          description: 'Default. Fast and cost-effective Qwen option.',
+        },
+        {
+          id: 'qwen3.6-plus',
+          label: 'qwen3.6-plus',
+          description: 'Balanced capability, latency, and cost.',
+        },
+        {
+          id: 'qwen3-max',
+          label: 'qwen3-max',
+          description: 'Most capable Qwen option for more complex changes.',
+        },
+      ],
     });
+  });
+
+  it('checks whether a model belongs to a provider', () => {
+    assert.equal(isProviderModel('DeepSeek', 'deepseek-v4-flash'), true);
+    assert.equal(isProviderModel('DeepSeek', 'qwen3.6-flash'), false);
+    assert.equal(isProviderModel('Alibaba (China)', 'qwen3-max'), true);
   });
 });
 

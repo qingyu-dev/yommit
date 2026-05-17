@@ -91,11 +91,15 @@ function createUi(overrides = {}) {
     showError(message) {
       this.errors.push(message);
     },
+    showInformation() {},
     async withGeneratingProgress(task) {
       return task(undefined);
     },
     async handleAuthError(provider) {
       this.authProviders.push(provider);
+    },
+    async pickModel() {
+      return undefined;
     },
     ...overrides,
   };

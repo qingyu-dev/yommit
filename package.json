@@ -45,6 +45,10 @@
         "title": "Yommit: Set API Key"
       },
       {
+        "command": "yommit.selectModel",
+        "title": "Yommit: Select Model"
+      },
+      {
         "command": "yommit.clearApiKey",
         "title": "Yommit: Clear API Key"
       }
@@ -72,11 +76,6 @@
           ],
           "default": "DeepSeek",
           "description": "Model provider used to generate commit messages."
-        },
-        "yommit.model": {
-          "type": "string",
-          "default": "",
-          "description": "Optional model override. Leave empty to use the selected provider default."
         },
         "yommit.language": {
           "type": "string",
