@@ -1,15 +1,15 @@
 <p align="center">
-  <img src="assets/icon.png" alt="Yommit logo" width="128" height="128" />
+  <img src="https://raw.githubusercontent.com/qingyu-dev/yommit/main/assets/icon.png" alt="Yommit logo" width="128" height="128" />
 </p>
 
 <h1 align="center">Yommit</h1>
 
 <p align="center">
-  Generate Gitmoji commit messages from staged Git changes with AI.
+  Generate commit messages from staged Git changes with optional Gitmoji and Conventional Commit prefixes.
 </p>
 
 <p align="center">
-  English | <a href="README.zh-CN.md">简体中文</a>
+  English | <a href="https://github.com/qingyu-dev/yommit/blob/main/README.zh-CN.md">简体中文</a>
 </p>
 
 <p align="center">
@@ -18,7 +18,7 @@
   <a href="#settings">Settings</a>
 </p>
 
-Yommit is a VS Code extension that generates Gitmoji commit messages from your staged Git changes.
+Yommit is a VS Code extension that generates commit messages from your staged Git changes.
 
 It reads the current staged diff, sends the change summary to an Aliyun Bailian OpenAI-compatible model, and writes the generated message back to the VS Code Source Control commit input.
 
@@ -30,15 +30,17 @@ This project is inspired by [carloscuesta/gitmoji](https://github.com/carloscues
 
 - Generate commit messages from staged Git changes.
 - Write the result directly into the VS Code Source Control input box.
-- Use a concise Gitmoji format.
+- Support plain summaries, Gitmoji, Conventional Commit prefixes, or both together.
 - Store the Aliyun API key with VS Code SecretStorage.
 - Support Chinese and English commit summaries.
+- Toggle Gitmoji and Conventional Commit type output.
 - Use `qwen3.6-flash` by default for a faster and cheaper lightweight workflow.
 
 Example output:
 
 ```text
 ✨ add commit message generation entry
+✨ feat: add commit message generation entry
 🐛 handle empty staged changes
 ♻️ split commit generation use case
 ```
@@ -55,28 +57,32 @@ You can also run `Yommit: Generate Commit Message` from the Command Palette.
 
 ## Installation
 
-Build a local VSIX package:
+Install Yommit from the VS Code Marketplace:
 
-```bash
-npm install
-npm run package
-```
-
-Install it into VS Code:
-
-```bash
-code --install-extension yommit-0.0.1.vsix --force
-```
+1. Open the Extensions view in VS Code.
+2. Search for `Yommit`.
+3. Click `Install`.
 
 ## Settings
 
-| Setting           | Default                                             | Description                                |
-| ----------------- | --------------------------------------------------- | ------------------------------------------ |
-| `yommit.model`    | `qwen3.6-flash`                                     | Aliyun Bailian model name.                 |
-| `yommit.baseUrl`  | `https://dashscope.aliyuncs.com/compatible-mode/v1` | OpenAI-compatible Aliyun Bailian base URL. |
-| `yommit.language` | `zh`                                                | Commit summary language: `zh` or `en`.     |
+| Setting                      | Default                                             | Description                                |
+| ---------------------------- | --------------------------------------------------- | ------------------------------------------ |
+| `yommit.model`               | `qwen3.6-flash`                                     | Aliyun Bailian model name.                 |
+| `yommit.baseUrl`             | `https://dashscope.aliyuncs.com/compatible-mode/v1` | OpenAI-compatible Aliyun Bailian base URL. |
+| `yommit.language`            | `zh`                                                | Commit summary language: `zh` or `en`.     |
+| `yommit.useGitmoji`          | `true`                                              | Add a Gitmoji at the start of the message. |
+| `yommit.useConventionalType` | `false`                                             | Add a type like `feat:` to the message.    |
 
 The API key is stored in VS Code SecretStorage and is not written to `settings.json`.
+
+Output format depends on the Gitmoji and Conventional Commit type settings, and all four combinations are supported:
+
+| Gitmoji | Conventional type | Format                                   |
+| ------- | ----------------- | ---------------------------------------- |
+| on      | off               | `✨ add commit message generation`       |
+| on      | on                | `✨ feat: add commit message generation` |
+| off     | off               | `add commit message generation`          |
+| off     | on                | `feat: add commit message generation`    |
 
 ## Privacy and Security
 

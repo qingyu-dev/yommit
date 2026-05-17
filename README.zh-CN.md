@@ -1,15 +1,15 @@
 <p align="center">
-  <img src="assets/icon.png" alt="Yommit 标志" width="128" height="128" />
+  <img src="https://raw.githubusercontent.com/qingyu-dev/yommit/main/assets/icon.png" alt="Yommit 标志" width="128" height="128" />
 </p>
 
 <h1 align="center">Yommit</h1>
 
 <p align="center">
-  使用 AI 根据暂存区 Git 变更生成 Gitmoji 风格的提交信息。
+  使用 AI 根据暂存区 Git 变更生成提交信息，可自由组合 Gitmoji 和 Conventional Commit 前缀。
 </p>
 
 <p align="center">
-  <a href="README.md">English</a> | 简体中文
+  <a href="https://github.com/qingyu-dev/yommit/blob/main/README.md">English</a> | 简体中文
 </p>
 
 <p align="center">
@@ -18,7 +18,7 @@
   <a href="#配置">配置</a>
 </p>
 
-Yommit 是一个 VS Code 插件，可以根据当前 Git 暂存区变更生成 Gitmoji 风格的提交信息。
+Yommit 是一个 VS Code 插件，可以根据当前 Git 暂存区变更生成提交信息。
 
 它会读取当前暂存区 diff，把变更摘要发送给阿里云百炼 OpenAI 兼容模型，并把生成结果写回 VS Code Source Control 的提交输入框。
 
@@ -30,15 +30,17 @@ Yommit 是一个 VS Code 插件，可以根据当前 Git 暂存区变更生成 G
 
 - 根据暂存区 Git 变更生成提交信息。
 - 将生成结果直接写入 VS Code Source Control 提交输入框。
-- 使用简洁的 Gitmoji 格式。
+- 支持纯摘要、仅 Gitmoji、仅 Conventional Commit 前缀，或两者同时启用。
 - 使用 VS Code SecretStorage 保存阿里云 API Key。
 - 支持中文和英文提交摘要。
+- 可选择是否启用 Gitmoji 和 Conventional Commit type。
 - 默认使用 `qwen3.6-flash`，适合快速、低成本的轻量生成场景。
 
 示例输出：
 
 ```text
 ✨ 添加提交信息生成入口
+✨ feat: 添加提交信息生成入口
 🐛 修复空暂存区提示
 ♻️ 拆分提交生成用例
 ```
@@ -55,28 +57,32 @@ Yommit 是一个 VS Code 插件，可以根据当前 Git 暂存区变更生成 G
 
 ## 安装
 
-构建本地 VSIX 安装包：
+可直接在 VS Code 插件市场安装：
 
-```bash
-npm install
-npm run package
-```
-
-安装到 VS Code：
-
-```bash
-code --install-extension yommit-0.0.1.vsix --force
-```
+1. 打开 VS Code 的扩展视图。
+2. 搜索 `Yommit`。
+3. 点击 `Install` 安装。
 
 ## 配置
 
-| 配置项            | 默认值                                              | 说明                              |
-| ----------------- | --------------------------------------------------- | --------------------------------- |
-| `yommit.model`    | `qwen3.6-flash`                                     | 阿里云百炼模型名称。              |
-| `yommit.baseUrl`  | `https://dashscope.aliyuncs.com/compatible-mode/v1` | 阿里云百炼 OpenAI 兼容接口地址。  |
-| `yommit.language` | `zh`                                                | 提交摘要语言，支持 `zh` 或 `en`。 |
+| 配置项                       | 默认值                                              | 说明                                     |
+| ---------------------------- | --------------------------------------------------- | ---------------------------------------- |
+| `yommit.model`               | `qwen3.6-flash`                                     | 阿里云百炼模型名称。                     |
+| `yommit.baseUrl`             | `https://dashscope.aliyuncs.com/compatible-mode/v1` | 阿里云百炼 OpenAI 兼容接口地址。         |
+| `yommit.language`            | `zh`                                                | 提交摘要语言，支持 `zh` 或 `en`。        |
+| `yommit.useGitmoji`          | `true`                                              | 是否在提交信息开头添加 Gitmoji。         |
+| `yommit.useConventionalType` | `false`                                             | 是否在提交信息中添加 `feat:` 这类 type。 |
 
 API Key 会保存在 VS Code SecretStorage 中，不会写入 `settings.json`。
+
+生成格式由 Gitmoji 和 Conventional Commit type 两个开关决定，4 种组合都支持：
+
+| Gitmoji | Conventional type | 格式                            |
+| ------- | ----------------- | ------------------------------- |
+| 开      | 关                | `✨ 添加提交信息生成入口`       |
+| 开      | 开                | `✨ feat: 添加提交信息生成入口` |
+| 关      | 关                | `添加提交信息生成入口`          |
+| 关      | 开                | `feat: 添加提交信息生成入口`    |
 
 ## 隐私与安全
 
