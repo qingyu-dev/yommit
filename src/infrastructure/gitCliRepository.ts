@@ -1,8 +1,7 @@
 import * as cp from 'node:child_process';
 import * as util from 'node:util';
 import { GitPort } from '../application/ports';
-import { MAX_DIFF_CHARS } from '../domain/commitPrompt';
-import { StagedChanges } from '../domain/stagedChanges';
+import { MAX_STAGED_DIFF_CHARS, StagedChanges } from '../domain/stagedChanges';
 
 const execFile = util.promisify(cp.execFile);
 const GIT_OUTPUT_BUFFER = 1024 * 1024;
@@ -22,7 +21,7 @@ export class GitCliRepository implements GitPort {
     const [statResult, nameOnlyResult, diff] = await Promise.all([
       execFile('git', ['diff', '--cached', '--stat'], { cwd, maxBuffer: GIT_OUTPUT_BUFFER }),
       execFile('git', ['diff', '--cached', '--name-only'], { cwd, maxBuffer: GIT_OUTPUT_BUFFER }),
-      readGitOutput(cwd, ['diff', '--cached'], MAX_DIFF_CHARS + 1),
+      readGitOutput(cwd, ['diff', '--cached'], MAX_STAGED_DIFF_CHARS + 1),
     ]);
 
     return {

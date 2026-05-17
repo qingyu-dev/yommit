@@ -1,8 +1,6 @@
 import { CommitLanguage } from './commitLanguage';
 import { GITMOJI_REFERENCE } from './gitmojiReference';
-import { StagedChanges } from './stagedChanges';
-
-export const MAX_DIFF_CHARS = 12000;
+import { MAX_STAGED_DIFF_CHARS, StagedChanges } from './stagedChanges';
 
 export type CommitPromptOptions = {
   language: CommitLanguage;
@@ -29,8 +27,10 @@ export function buildCommitPrompt(
   stagedChanges: StagedChanges,
   options: CommitPromptOptions,
 ): string {
-  const isTruncated = stagedChanges.diff.length > MAX_DIFF_CHARS;
-  const diff = isTruncated ? stagedChanges.diff.slice(0, MAX_DIFF_CHARS) : stagedChanges.diff;
+  const isTruncated = stagedChanges.diff.length > MAX_STAGED_DIFF_CHARS;
+  const diff = isTruncated
+    ? stagedChanges.diff.slice(0, MAX_STAGED_DIFF_CHARS)
+    : stagedChanges.diff;
   const { language, useGitmoji, useConventionalType } = options;
   const summaryLanguage = language === 'en' ? 'English' : 'Chinese';
   const summaryRule =

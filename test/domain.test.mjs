@@ -7,6 +7,12 @@ const require = createRequire(import.meta.url);
 const { normalizeCommitMessage } = require('../out/domain/commitMessage.js');
 const { toCommitLanguage } = require('../out/domain/commitLanguage.js');
 const { buildCommitPrompt } = require('../out/domain/commitPrompt.js');
+const { MAX_STAGED_DIFF_CHARS } = require('../out/domain/stagedChanges.js');
+const {
+  DEFAULT_PROVIDER,
+  getProviderDefaults,
+  toModelProvider,
+} = require('../out/domain/modelProvider.js');
 
 const stagedChanges = {
   stat: 'src/example.ts | 2 ++',
@@ -32,6 +38,31 @@ describe('toCommitLanguage', () => {
     assert.equal(toCommitLanguage('en'), 'en');
     assert.equal(toCommitLanguage('fr'), 'zh');
     assert.equal(toCommitLanguage(undefined), 'zh');
+  });
+});
+
+describe('modelProvider', () => {
+  it('defaults unsupported values to DeepSeek', () => {
+    assert.equal(DEFAULT_PROVIDER, 'DeepSeek');
+    assert.equal(toModelProvider('DeepSeek'), 'DeepSeek');
+    assert.equal(toModelProvider('Alibaba (China)'), 'Alibaba (China)');
+    assert.equal(toModelProvider('other'), 'DeepSeek');
+    assert.equal(toModelProvider(undefined), 'DeepSeek');
+  });
+
+  it('returns provider-specific defaults', () => {
+    assert.deepEqual(getProviderDefaults('DeepSeek'), {
+      label: 'DeepSeek',
+      model: 'deepseek-v4-flash',
+      baseUrl: 'https://api.deepseek.com',
+      secretKey: 'yommit.deepseekApiKey',
+    });
+    assert.deepEqual(getProviderDefaults('Alibaba (China)'), {
+      label: 'Alibaba (China)',
+      model: 'qwen3.6-flash',
+      baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+      secretKey: 'yommit.aliyunApiKey',
+    });
   });
 });
 
@@ -96,7 +127,7 @@ describe('buildCommitPrompt', () => {
       {
         stat: 'large.ts | 1 +',
         files: 'large.ts',
-        diff: 'a'.repeat(13_000),
+        diff: 'a'.repeat(MAX_STAGED_DIFF_CHARS + 1_000),
       },
       {
         language: 'zh',
